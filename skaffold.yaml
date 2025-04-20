@@ -4,10 +4,12 @@ manifests:
   rawYaml:
     - ./infra/k8s/*
 build:
-  local:
-    push: false
+  # local:
+  #   push: false
+  googleCloudBuild:
+    projectId: ticketing-456611
   artifacts:
-    - image: ibnumahamat/auth
+    - image: us.gcr.io/ticketing-456611/auth
       context: auth
       docker:
         dockerfile: Dockerfile
