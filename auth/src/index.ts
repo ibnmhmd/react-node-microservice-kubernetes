@@ -43,12 +43,16 @@ app.use(errorHandler);
 
 const start = async () => {
   try {
+    if(!process.env.JWT_KEY) {
+      throw new Error('JWT_KEY must be defined');
+    }
     const mongoUri = process.env.MONGO_URI;
     const mongoDb = process.env.MONGO_DB;
     if (!mongoUri) {
       throw new Error('MONGO_URI must be defined');
     } 
     // Connect to MongoDB
+
     
     await mongoose.connect(`${mongoUri}/${mongoDb}`);
     console.log('Successfully connected to MongoDB');

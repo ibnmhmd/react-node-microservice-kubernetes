@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import { UserAttributes } from '../interface/user-attributes';
 import { UserDoc, UserModel } from '../interface/user-model';
 import { Password } from '../services/password';
+import { version } from 'os';
 
 // Define the User schema
 const userSchema = new mongoose.Schema({
@@ -13,7 +14,16 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
-    },
+    }
+}, {
+    toJSON: {
+            transform(doc, ret) {
+                ret.id = ret._id;
+                delete ret._id;
+                delete ret.password;
+            }
+        },
+        versionKey: false
 });
 
 
