@@ -17,6 +17,12 @@ spec:
           image: us.gcr.io/ticketing-456611/auth
           ports:
             - containerPort: 3000
+          env:
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
           resources:
             limits:
               memory: "512Mi"
