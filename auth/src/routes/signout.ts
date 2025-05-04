@@ -4,7 +4,8 @@ import { Request, Response } from 'express';
 const router = express.Router();
 
 router.post('/api/users/signout', (req: Request, res: Response) => {
-    res.send({ signIn: 'Testing Signout API.' }); // Replace with actual logic to fetch the current user
+    req.session = null; // Clear the session
+    res.status(200).send({ message: 'Successfully signed out', signout: true });
 });
 
 export { router as signoutRouter };
