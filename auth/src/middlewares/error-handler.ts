@@ -4,12 +4,10 @@ import { DatabaseConnectionError } from '../errors/database-connection-error';
 import { CustomError } from '../abstract/custom-error';
 
 const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
-    console.log('Global error handler:');
     if(err instanceof CustomError) {
-         res.status(err.statusCode).send({ errors: err.serializeErrors() });
-         return;
+      return res.status(err.statusCode).send({ errors: err.serializeErrors() });
     }
- res.status(400).send({ errors: [{ message: err.message }] });
+ return res.status(400).send({ errors: [{ message: err.message }] });
 };
 
 export { errorHandler };

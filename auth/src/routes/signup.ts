@@ -5,6 +5,7 @@ import { User } from '../models/user';
 import { BadRequestError } from '../errors/bad-request-error';
 import jwt from 'jsonwebtoken';
 import { validateRequest } from '../middlewares/validate-request';
+import asyncHandler from "express-async-handler";
 const router = express.Router();
 
 router.post(
@@ -17,9 +18,7 @@ router.post(
             .withMessage('Password must be between 4 and 20 characters'),
     ],
     validateRequest,
-    async (req: Request, res: Response) => {
- 
-        console.log('Creating a user...');  
+    asyncHandler(async (req: Request, res: Response) => {
         const { email, password } = req.body;
         const userFound = await User.findOne({ email });
         if(userFound) {
@@ -31,6 +30,6 @@ router.post(
         req.session = { jwt: userJwt }; // Store it on session object
         res.status(201).send(user);
     }
-);
+));
 
 export { router as signupRouter };
