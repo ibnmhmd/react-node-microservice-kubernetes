@@ -1,11 +1,12 @@
 import express from "express";
 import asyncHandler from "express-async-handler";
-import { currentUserRouter } from './routes/current-user';
-import { signinRouter } from './routes/signin';
-import { signupRouter } from './routes/signup';
-import { signoutRouter } from './routes/signout';
-import {  errorHandler, NotFoundError} from '@ticko/common';
+import {  errorHandler, NotFoundError, currentUser } from '@ticko/common';
 import cookieSession from 'cookie-session';
+import { createTicketRouter } from './routes/create-ticket';
+import { showTicketRouter } from './routes/show-ticket';
+import { getTicketsRouter } from './routes/get-tickets';
+import { updateTicketRouter } from "./routes/update-ticket";
+
 require('dotenv').config();
 
 const app = express();
@@ -21,11 +22,11 @@ app.use(
   })
 );
 
-// Routes
-app.use(currentUserRouter);
-app.use(signinRouter);
-app.use(signupRouter);
-app.use(signoutRouter);
+app.use(currentUser);
+app.use(createTicketRouter);
+app.use(showTicketRouter);
+app.use(getTicketsRouter);
+app.use(updateTicketRouter);
 
 app.all('/{*splat}', asyncHandler(async (req, res, next) => {
   throw new NotFoundError();

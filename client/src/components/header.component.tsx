@@ -7,7 +7,6 @@ type HeaderProps = {
 };
 
 export default function Header({ currentUser }: HeaderProps) {
-    console.log('Header component rendered with currentUser:', currentUser);
     const routeConfigs = [
       !currentUser && { name: 'Sign In', path: '/auth/signin' },
       !currentUser && { name: 'Sign Up', path: '/auth/signup' },

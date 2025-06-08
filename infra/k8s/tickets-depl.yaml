@@ -1,32 +1,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth-depl
+  name: tickets-depl
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: auth
+      app: tickets
   template:
     metadata:
       labels:
-        app: auth
+        app: tickets
     spec:
       containers:
-        - name: auth
-          image: us.gcr.io/ticketing-456611/auth
+        - name: tickets
+          image: us.gcr.io/ticketing-456611/tickets
           ports:
             - containerPort: 3000
           env:
-            - name: JWT_KEY
+            - name: JWT_KEY                             
               valueFrom:
                 secretKeyRef:
                   name: jwt-secret
                   key: JWT_KEY
             - name: MONGO_URI
-              value: "mongodb://auth-mongo-srv:27017"
+              value: "mongodb://tickets-mongo-srv:27017"
             - name: MONGO_DB
-              value: "auth"
+              value: "tickets"
             - name: MONGO_USER
               value: "admin"
             - name: JWT_EXPIRATION
@@ -34,7 +34,7 @@ spec:
             - name: JWT_ALGORITHM
               value: "HS256"
             - name: JWT_ISSUER
-              value: "auth_service"
+              value: "tickets_service"
             - name: NODE_ENV
               value: "development"
           resources:
@@ -48,12 +48,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: auth-srv
+  name: tickets-srv
 spec:
   selector:
-    app: auth
+    app: tickets
   ports:
-    - name: auth
+    - name: tickets
       protocol: TCP
       port: 3000
       targetPort: 3000

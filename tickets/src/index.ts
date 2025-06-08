@@ -8,7 +8,7 @@ const start = async () => {
     }
     const mongoUri = process.env.MONGO_URI;
     const mongoDb = process.env.MONGO_DB;
-    if (!mongoUri || !mongoDb) {
+    if (!mongoUri ||!mongoDb) {
       throw new Error('MONGO_URI and MONGO_DB must be defined');
     } 
     // Connect to MongoDB

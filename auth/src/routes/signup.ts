@@ -2,9 +2,8 @@ import express from 'express';
 import { Request, Response } from 'express';
 import { body} from 'express-validator';
 import { User } from '../models/user';
-import { BadRequestError } from '../errors/bad-request-error';
+import { BadRequestError , validateRequest} from '@ticko/common';
 import jwt from 'jsonwebtoken';
-import { validateRequest } from '../middlewares/validate-request';
 import asyncHandler from "express-async-handler";
 const router = express.Router();
 

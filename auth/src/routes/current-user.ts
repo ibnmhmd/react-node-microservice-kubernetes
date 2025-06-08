@@ -1,7 +1,6 @@
 import express from 'express';
 import { Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
-import { currentUser } from '../middlewares/current-user';
+import { currentUser } from '@ticko/common';
 const router = express.Router();
 
 router.get('/api/users/currentuser', currentUser, (req: Request, res: Response) => {
