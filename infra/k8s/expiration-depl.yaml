@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: expiration-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: expiration
+  template:
+    metadata:
+      labels:
+        app: expiration
+    spec:
+      containers:
+        - name: expiration
+          image: us.gcr.io/ticketing-456611/expiration
+          ports:
+            - containerPort: 3000
+          env:
+            - name: JWT_KEY                             
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+            - name: REDIS_HOST
+              value: "expiration-redis-srv"
+            - name: NODE_ENV
+              value: "development"
+            - name: NATS_CLUSTER_ID
+              value: "ticketing-456611"
+            - name : REDIS_PORT
+              value: "6379"
+            - name: NATS_URL
+              value: "http://nats-srv:4222"
+            - name: POD_NAME
+              value: "EXPIRATION"
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: ORDER_EXPIRATION_WINDOW_MINUTES
+              value: "15" # 15 minutes
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "250m"
+            requests:
+              memory: "256Mi"
+              cpu: "100m"

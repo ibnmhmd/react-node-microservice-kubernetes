@@ -37,6 +37,16 @@ spec:
               value: "tickets_service"
             - name: NODE_ENV
               value: "development"
+            - name: NATS_CLUSTER_ID
+              value: "ticketing-456611"
+            - name: NATS_URL
+              value: "http://nats-srv:4222"
+            - name: POD_NAME
+              value: "TICKETS"
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
           resources:
             limits:
               memory: "512Mi"
