@@ -3,4 +3,6 @@
 /common/node_modules
 /tickets/node_modules
 /tickets/node_modules/.cache/mongodb-memory-server/
+/orders/node_modules
+/payments/node_modules
 node_modules

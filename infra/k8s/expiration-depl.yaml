@@ -39,8 +39,6 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
-            - name: ORDER_EXPIRATION_WINDOW_MINUTES
-              value: "15" # 15 minutes
           resources:
             limits:
               memory: "512Mi"

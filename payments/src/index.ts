@@ -2,9 +2,10 @@ import mongoose from 'mongoose';
 import { app , PORT } from './app';
 import { DatabaseConnectionError } from '@ticko/common';
 import { natsWrapper } from './nats-wrapper';
-import { TicketCreatedListener } from './events/listeners/ticket-created-listener';// import { natsWrapper } from './nats-wrapper';
-import { TicketUpdatedListener } from './events/listeners/ticket-updated-listener';
-import { ExpirationCompleteListener } from './events/listeners/expiration-complete-listener';
+import { OrderCancelledListener } from './events/listeners/order-cancelled-listener';
+import { OrderCreatedEventListener } from './events/listeners/order-created-event';
+
+// import { natsWrapper } from './nats-wrapper';
 
 const start = async () => {
   try {
@@ -67,9 +68,8 @@ const connectToNATSServer = async () => {
       });
       process.on('SIGINT', () => natsWrapper.client.close());
       process.on('SIGTERM', () => natsWrapper.client.close());
-      new TicketCreatedListener(natsWrapper.client).listen();
-      new TicketUpdatedListener(natsWrapper.client).listen();
-      new ExpirationCompleteListener(natsWrapper.client).listen();
+      new OrderCancelledListener(natsWrapper.client).listen();
+      new OrderCreatedEventListener(natsWrapper.client).listen();
       resolve();
     }).catch((err) => {
       reject(`Error connecting to NATS in pod ${process.env.POD_NAME}: - ${err} `);
@@ -78,7 +78,7 @@ const connectToNATSServer = async () => {
 }
 
 start().catch((error) => {
-  console.error(`Error starting the ${process.env.POD_NAME} server: ${error.message}`);
+  console.error('Error starting the server:', error);
   //-- throw new BadRequestError('Error starting the server: ' + error.message);
   process.exit(1);
 });

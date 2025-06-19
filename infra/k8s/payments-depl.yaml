@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: orders-depl
+  name: payments-depl
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: orders
+      app: payments
   template:
     metadata:
       labels:
-        app: orders
+        app: payments
     spec:
       containers:
-        - name: orders
-          image: us.gcr.io/ticketing-456611/orders
+        - name: payments
+          image: us.gcr.io/ticketing-456611/payments
           ports:
             - containerPort: 3000
           env:
@@ -24,9 +24,9 @@ spec:
                   name: jwt-secret
                   key: JWT_KEY
             - name: MONGO_URI
-              value: "mongodb://orders-mongo-srv:27017"
+              value: "mongodb://payments-mongo-srv:27017"
             - name: MONGO_DB
-              value: "orders"
+              value: "payments"
             - name: MONGO_USER
               value: "admin"
             - name: JWT_EXPIRATION
@@ -34,7 +34,7 @@ spec:
             - name: JWT_ALGORITHM
               value: "HS256"
             - name: JWT_ISSUER
-              value: "orders_service"
+              value: "payments_service"
             - name: NODE_ENV
               value: "development"
             - name: NATS_CLUSTER_ID
@@ -42,13 +42,17 @@ spec:
             - name: NATS_URL
               value: "http://nats-srv:4222"
             - name: POD_NAME
-              value: "ORDERS"
+              value: "PAYMENTS"
             - name: NATS_CLIENT_ID
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
-            - name: ORDER_EXPIRATION_WINDOW_MINUTES
-              value: "15" # 15 minutes
+            - name: STRIPE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: stripe-secret
+                  key: STRIPE_KEY
+                  
           resources:
             limits:
               memory: "512Mi"
@@ -60,12 +64,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: orders-srv
+  name: payments-srv
 spec:
   selector:
-    app: orders
+    app: payments
   ports:
-    - name: orders
+    - name: payments
       protocol: TCP
       port: 3000
       targetPort: 3000
