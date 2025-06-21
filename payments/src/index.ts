@@ -8,7 +8,6 @@ import { OrderCreatedEventListener } from './events/listeners/order-created-even
 // import { natsWrapper } from './nats-wrapper';
 
 const start = async () => {
-    console.log('starting payments server')
   try {
     if(!process.env.JWT_KEY) {
       throw new Error('JWT_KEY must be defined');
