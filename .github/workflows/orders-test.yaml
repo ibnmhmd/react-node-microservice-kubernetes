@@ -1,0 +1,11 @@
+name: orders-test
+
+on:
+  pull_request
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: cd orders && rm -rf node_modules package-lock.json && npm install && npm run test:ci
