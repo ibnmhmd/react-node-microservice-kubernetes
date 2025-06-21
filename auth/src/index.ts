@@ -3,7 +3,6 @@ import { app , PORT } from './app';
 import { DatabaseConnectionError } from '@ticko/common';
 const start = async () => {
   try {
-    console.log('starting auth server')
     if(!process.env.JWT_KEY) {
       throw new Error('JWT_KEY must be defined');
     }
