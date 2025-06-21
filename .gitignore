@@ -6,3 +6,4 @@
 /orders/node_modules
 /payments/node_modules
 node_modules
+.DS_Store

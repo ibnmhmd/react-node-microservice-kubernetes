@@ -8,6 +8,8 @@ let mongo: MongoMemoryServer;
 declare global {
     var signin: (id?: string) => string[];
 }
+
+process.env.STRIPE_KEY = "sk_test_51RbmnwRKn3z0SaojlI5R7scCj8TrI0NEBnmvFzLmeovX2KMQsHd4FOKLpWKDCyElOHcaMvXGD4bgWWa2c4LSxp8i00nuh4iB6o";
 beforeAll(async () => {
     process.env.JWT_KEY = 'test_jwt_key'; // Set environment variables needed for tests
     mongo = await MongoMemoryServer.create();
@@ -46,5 +48,5 @@ global.signin =  (id?: string) => {
     return [`session=${base64}`]; //return [`session=${base64}`];
 };
 
-jest.mock('../stripe');
+// jest.mock('../stripe');
 jest.mock('../nats-wrapper'); // Mocking natsWrapper for testing purposes

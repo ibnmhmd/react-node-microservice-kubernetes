@@ -49,13 +49,15 @@ spec:
                   fieldPath: metadata.name
             - name: ORDER_EXPIRATION_WINDOW_MINUTES
               value: "15" # 15 minutes
+            - name: NODE_OPTIONS
+              value: "--max-old-space-size=768"
           resources:
             limits:
+              memory: "1Gi"
+              cpu: "500m"
+            requests:
               memory: "512Mi"
               cpu: "250m"
-            requests:
-              memory: "256Mi"
-              cpu: "100m"
 ---
 apiVersion: v1
 kind: Service

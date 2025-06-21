@@ -51,15 +51,16 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: stripe-secret
-                  key: STRIPE_KEY
-                  
+                  key: STRIPE_KEY                  
+            - name: NODE_OPTIONS
+              value: "--max-old-space-size=768"
           resources:
             limits:
+              memory: "1Gi"
+              cpu: "500m"
+            requests:
               memory: "512Mi"
               cpu: "250m"
-            requests:
-              memory: "256Mi"
-              cpu: "100m"
 ---
 apiVersion: v1
 kind: Service

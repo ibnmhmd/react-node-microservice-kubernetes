@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import { Order } from '../../models/order';
 import { OrderStatus } from '@ticko/common';
 import { stripe } from '../../stripe';
+import { Payment } from '../../models/payment';
 
 const createOrder =  async () => {
   const order = await Order.build({ 
@@ -89,12 +90,13 @@ describe('POST /api/payments', () => {
 
       it('returns 201 and the token and orderId if valid inputs are provided', async () => {
            const id = new mongoose.Types.ObjectId().toHexString();
+           const price = Math.floor(Math.random()*100000);
            const token = 'tok_visa';
             const order = Order.build({ 
                 id: new mongoose.Types.ObjectId().toHexString(),
                 version: 0,
                 userId: id,
-                price: 10,
+                price,
                 status: OrderStatus.Created
             });
             await order.save();
@@ -105,7 +107,13 @@ describe('POST /api/payments', () => {
                 .send({ token, orderId });
                 expect(response.status).toEqual(201);
             
-               expect(stripe.charges.create).toHaveBeenCalled();
-               expect(response.body).toEqual({ token, orderId });
+              // expect(stripe.charges.create).toHaveBeenCalled();
+               const stripeCharges = await stripe.charges.list({ limit: 50 });
+               const stripeCharge = stripeCharges.data.find(charge => charge.amount === price*100 );
+               const payment = await Payment.findOne({ orderId , stripeId: stripeCharge!.id});
+               expect(response.body.paymentId).not.toBeNull();
+               expect(stripeCharge).toBeDefined();
+               expect(stripeCharge?.amount).toEqual(price*100);
+               expect(payment).not.toBeNull();
       });
 });

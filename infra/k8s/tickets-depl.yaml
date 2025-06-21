@@ -47,9 +47,11 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
+            - name: NODE_OPTIONS
+              value: "--max-old-space-size=768"
           resources:
             limits:
-              memory: "512Mi"
+              memory: "256Mi"
               cpu: "250m"
             requests:
               memory: "256Mi"
