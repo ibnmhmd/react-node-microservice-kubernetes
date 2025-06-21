@@ -38,6 +38,7 @@
     "express-async-handler": "^1.2.0",
     "express-validator": "^7.2.1",
     "jsonwebtoken": "^9.0.2",
+    "mime": "^4.0.7",
     "mongoose": "^8.14.0",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.5.4"
