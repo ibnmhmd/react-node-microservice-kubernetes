@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payments-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payments
+  template:
+    metadata:
+      labels:
+        app: payments
+    spec:
+      containers:
+        - name: payments
+          image: us.gcr.io/ticketing-456611/payments
+          ports:
+            - containerPort: 3000
+          env:
+            - name: JWT_KEY                             
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+            - name: MONGO_URI
+              value: "mongodb://payments-mongo-srv:27017"
+            - name: MONGO_DB
+              value: "payments"
+            - name: MONGO_USER
+              value: "admin"
+            - name: JWT_EXPIRATION
+              value: "3600"
+            - name: JWT_ALGORITHM
+              value: "HS256"
+            - name: JWT_ISSUER
+              value: "payments_service"
+            - name: NODE_ENV
+              value: "development"
+            - name: NATS_CLUSTER_ID
+              value: "ticketing-456611"
+            - name: NATS_URL
+              value: "http://nats-srv:4222"
+            - name: POD_NAME
+              value: "PAYMENTS"
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: STRIPE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: stripe-secret
+                  key: STRIPE_KEY                  
+            - name: NODE_OPTIONS
+              value: "--max-old-space-size=768"
+          resources:
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payments-srv
+spec:
+  selector:
+    app: payments
+  ports:
+    - name: payments
+      protocol: TCP
+      port: 3000
+      targetPort: 3000

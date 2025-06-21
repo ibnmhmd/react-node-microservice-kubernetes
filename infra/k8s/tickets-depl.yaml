@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tickets-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tickets
+  template:
+    metadata:
+      labels:
+        app: tickets
+    spec:
+      containers:
+        - name: tickets
+          image: us.gcr.io/ticketing-456611/tickets
+          ports:
+            - containerPort: 3000
+          env:
+            - name: JWT_KEY                             
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+            - name: MONGO_URI
+              value: "mongodb://tickets-mongo-srv:27017"
+            - name: MONGO_DB
+              value: "tickets"
+            - name: MONGO_USER
+              value: "admin"
+            - name: JWT_EXPIRATION
+              value: "3600"
+            - name: JWT_ALGORITHM
+              value: "HS256"
+            - name: JWT_ISSUER
+              value: "tickets_service"
+            - name: NODE_ENV
+              value: "development"
+            - name: NATS_CLUSTER_ID
+              value: "ticketing-456611"
+            - name: NATS_URL
+              value: "http://nats-srv:4222"
+            - name: POD_NAME
+              value: "TICKETS"
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NODE_OPTIONS
+              value: "--max-old-space-size=768"
+          resources:
+            limits:
+              memory: "256Mi"
+              cpu: "250m"
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tickets-srv
+spec:
+  selector:
+    app: tickets
+  ports:
+    - name: tickets
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
